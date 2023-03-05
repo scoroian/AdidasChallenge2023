@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.adidas.backend.publicservice.controller.PublicServiceController;
-import com.adidas.backend.publicservice.model.User;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(value = PublicServiceController.class)
@@ -22,7 +21,7 @@ class DummyRestControllerTests {
 	@Test
 	void testDummyController() {
 		String expectedResponse = "Hello, this is a dummy response from public service";
-		ResponseEntity<User> response = dummyRestController.getUser("asd@adiclub.com");
+		ResponseEntity<String> response = dummyRestController.getUser("asd@adiclub.com");
 		Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
 		Assertions.assertEquals(expectedResponse, response.getBody());
 	}
