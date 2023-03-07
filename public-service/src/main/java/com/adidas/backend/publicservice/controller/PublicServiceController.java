@@ -36,16 +36,14 @@ public class PublicServiceController {
 	public ResponseEntity<String> getUser(@RequestParam(value = "email") final String email) {
 		try {
 			log.info("Starting request to get user with email: {}", email);
-			String urlAdiClub = env.getProperty("url.priorityQueue");
+			String urlAdiClub = env.getProperty("url.priorityQueue") + "?email=" + email;
 
-			MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-			requestBody.add("email", email);
 
-//			String response = restTemplate.postForObject(urlAdiClub, requestBody, String.class);
+			String response = restTemplate.postForObject(urlAdiClub, String.class, String.class);
 
-			HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody);
-			log.info("Request body: {}", requestEntity.getBody());
-			String response = restTemplate.postForObject(urlAdiClub, requestEntity, String.class);
+//			HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody);
+//			log.info("Request body: {}", requestEntity.getBody());
+//			String response = restTemplate.postForObject(urlAdiClub, requestEntity, String.class);
 
 			log.info("Members service response: {}", response);
 			return ResponseEntity.ok(response);

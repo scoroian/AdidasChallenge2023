@@ -35,7 +35,7 @@ public class PriorityQueueService {
 	public boolean addUser(String email) throws DuplicateElementException {
 		// Send a POST request to the "adiClub" service to get the user with the given
 		// email
-		String urlAdiClub = env.getProperty("url.adiClub");
+		String urlAdiClub = env.getProperty("url.adiClub") + "?emailAddress=" + email;
 		User adiClubUser = restTemplate.getForObject(urlAdiClub, User.class);
 
 		boolean added = priorityQueue.add(adiClubUser);

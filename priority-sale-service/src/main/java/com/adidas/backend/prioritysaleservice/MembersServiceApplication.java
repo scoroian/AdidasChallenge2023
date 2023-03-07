@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.adidas.backend.publicservice", "com.adidas.backend.common", "com.adidas.backend.logging", "com.adidas.backend.config"})
+@ComponentScan(basePackages = {"com.adidas.backend.prioritysaleservice", "com.adidas.backend.common", "com.adidas.backend.logging", "com.adidas.backend.prioritysaleservice.config"})
 @EnableScheduling
 public class MembersServiceApplication {
 
