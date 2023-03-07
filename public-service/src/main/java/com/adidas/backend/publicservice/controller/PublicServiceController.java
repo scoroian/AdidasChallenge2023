@@ -18,7 +18,7 @@ import lombok.extern.log4j.Log4j2;
 
 @RestController
 @Log4j2
-@RequestMapping("/public")
+@RequestMapping(value = "/public")
 public class PublicServiceController {
 
 	@Autowired
@@ -27,11 +27,16 @@ public class PublicServiceController {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@PostMapping("/user")
+	public PublicServiceController(Environment env, RestTemplate restTemplate) {
+		this.env = env;
+		this.restTemplate = restTemplate;
+	}
+
+	@PostMapping
 	public ResponseEntity<String> getUser(@RequestParam(value = "email") final String email) {
 		try {
 			log.info("Starting request to get user with email: {}", email);
-			String urlAdiClub = env.getProperty("url.priorityQueue") + "/user";
+			String urlAdiClub = env.getProperty("url.priorityQueue");
 
 			MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
 			requestBody.add("email", email);
@@ -42,7 +47,6 @@ public class PublicServiceController {
 			log.info("Request body: {}", requestEntity.getBody());
 			String response = restTemplate.postForObject(urlAdiClub, requestEntity, String.class);
 
-			
 			log.info("Members service response: {}", response);
 			return ResponseEntity.ok(response);
 		} catch (RestClientException e) {
