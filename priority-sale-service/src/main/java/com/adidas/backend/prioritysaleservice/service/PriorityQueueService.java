@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.adidas.backend.prioritysaleservice.exception.DuplicateElementException;
-import com.adidas.backend.prioritysaleservice.model.PriorityQueueImpl;
 import com.adidas.backend.prioritysaleservice.model.User;
 
 import lombok.extern.log4j.Log4j2;
@@ -27,7 +26,9 @@ public class PriorityQueueService {
 	private final PriorityQueueImpl priorityQueue;
 
 	// Constructor to initialize the priority queue
-	public PriorityQueueService(PriorityQueueImpl priorityQueue) {
+	public PriorityQueueService(RestTemplate restTemplate, Environment env, PriorityQueueImpl priorityQueue) {
+		this.restTemplate = restTemplate;
+		this.env = env;
 		this.priorityQueue = priorityQueue;
 	}
 
@@ -67,7 +68,7 @@ public class PriorityQueueService {
 	 * Method to periodically call the "send-email" endpoint of the email-service
 	 * API for the user with the highest priority.
 	 */
-	@Scheduled(fixedDelay = 60000) // Execute every minute
+	@Scheduled(fixedDelayString = "${priorityqueue.job.delay}") // Execute every minute
 	public void sendEmailToMostPriorityUser() {
 		// Get the user with the highest priority
 		User mostPriorityUser = getMostPriorityUser();

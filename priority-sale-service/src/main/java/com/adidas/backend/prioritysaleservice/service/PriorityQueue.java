@@ -1,8 +1,8 @@
-package com.adidas.backend.prioritysaleservice.model;
+package com.adidas.backend.prioritysaleservice.service;
 
 import com.adidas.backend.prioritysaleservice.exception.DuplicateElementException;
 
-public interface PriorityQueueInterface<T> {
+public interface PriorityQueue<T> {
 
 	/**
 	 * Inserts the specified element into this priority queue.

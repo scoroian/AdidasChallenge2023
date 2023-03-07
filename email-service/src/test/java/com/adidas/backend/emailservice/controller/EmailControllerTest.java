@@ -1,54 +1,48 @@
 package com.adidas.backend.emailservice.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.adidas.backend.emailservice.service.EmailService;
 
-public class EmailControllerTest {
+@SpringBootTest
+class EmailControllerTest {
 
-    private EmailController emailController;
-    private EmailService emailService;
+	@InjectMocks
+	private EmailController emailController;
 
-    @BeforeEach
-    public void setUp() {
-        emailService = mock(EmailService.class);
-        emailController = new EmailController(emailService);
-    }
+	@Mock
+	private EmailService emailService;
 
-    @Test
-    public void testSendEmail() throws Exception {
-        // Arrange
-        String email = "test@adiclub.com";
-        emailService.sendEmail(email);
-
-        // Act
-        ResponseEntity<String> response = emailController.sendEmail(email);
-
-        // Assert
-        verify(emailService).sendEmail(email);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
-
-    @Test
-    public void testSendEmailError() throws Exception {
-        // Arrange
-        String email = null;
-        Exception exception = new Exception("Failed to send email");
-        emailService.sendEmail(email);
-
-        // Act
-        ResponseEntity<String> response = emailController.sendEmail(email);
-
-        // Assert
-        verify(emailService).sendEmail(email);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-		assertEquals("Failed to send email", response.getBody());
+	@BeforeEach
+	void setUp() throws Exception {
+		MockitoAnnotations.openMocks(this);
 	}
+
+	@Test
+	void testSendEmailSuccess() throws Exception {
+		String email = "test@adiclub.com";
+		ResponseEntity<String> response = emailController.sendEmail(email);
+		verify(emailService).sendEmail(email);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
+
+	@Test
+	void testSendEmailFailure() throws Exception {
+		String email = "";
+		doThrow(new NullPointerException("Email cannot be null")).when(emailService).sendEmail(email);
+		ResponseEntity<String> response = emailController.sendEmail(email);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+	}
+
 }

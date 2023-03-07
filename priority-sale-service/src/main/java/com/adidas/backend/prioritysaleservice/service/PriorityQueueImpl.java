@@ -1,18 +1,17 @@
-package com.adidas.backend.prioritysaleservice.model;
-
-import java.util.PriorityQueue;
+package com.adidas.backend.prioritysaleservice.service;
 
 import org.springframework.stereotype.Component;
 
 import com.adidas.backend.prioritysaleservice.exception.DuplicateElementException;
+import com.adidas.backend.prioritysaleservice.model.User;
 
 @Component
-public class PriorityQueueImpl implements PriorityQueueInterface<User> {
+public class PriorityQueueImpl implements PriorityQueue<User> {
 
-	private final PriorityQueue<User> priorityQueue;
+	private final java.util.PriorityQueue<User> priorityQueue;
 
 	public PriorityQueueImpl() {
-		priorityQueue = new PriorityQueue<>(new PriorityComparatorImpl());
+		priorityQueue = new java.util.PriorityQueue<>(new PriorityComparatorImpl());
 	}
 
 	@Override

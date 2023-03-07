@@ -1,18 +1,14 @@
 package com.adidas.backend.publicservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+
+import com.adidas.backend.publicservice.service.PublicService;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -22,34 +18,22 @@ import lombok.extern.log4j.Log4j2;
 public class PublicServiceController {
 
 	@Autowired
-	private Environment env;
+	private PublicService publicService;
 
-	@Autowired
-	private RestTemplate restTemplate;
-
-	public PublicServiceController(Environment env, RestTemplate restTemplate) {
-		this.env = env;
-		this.restTemplate = restTemplate;
+	public PublicServiceController(PublicService publicService) {
+		this.publicService = publicService;
 	}
 
 	@PostMapping
 	public ResponseEntity<String> getUser(@RequestParam(value = "email") final String email) {
-		try {
-			log.info("Starting request to get user with email: {}", email);
-			String urlAdiClub = env.getProperty("url.priorityQueue") + "?email=" + email;
-
-
-			String response = restTemplate.postForObject(urlAdiClub, String.class, String.class);
-
-//			HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody);
-//			log.info("Request body: {}", requestEntity.getBody());
-//			String response = restTemplate.postForObject(urlAdiClub, requestEntity, String.class);
-
-			log.info("Members service response: {}", response);
+		log.info("Starting request to get user with email: {}", email);
+		String response = publicService.addUser(email);
+		log.info("Members service response: {}", response);
+		if ("User added to the queue.".equalsIgnoreCase(response)) {
 			return ResponseEntity.ok(response);
-		} catch (RestClientException e) {
-			log.error("Error processing request to get user with email {}: {}", email, e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		} else {
+			log.error("Error processing request to get user with email {}: {}", email, response);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 	}
 

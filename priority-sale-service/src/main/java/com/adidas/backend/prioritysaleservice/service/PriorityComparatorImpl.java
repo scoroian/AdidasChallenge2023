@@ -1,6 +1,8 @@
-package com.adidas.backend.prioritysaleservice.model;
+package com.adidas.backend.prioritysaleservice.service;
 
-public class PriorityComparatorImpl implements PriorityComparatorInterface{
+import com.adidas.backend.prioritysaleservice.model.User;
+
+public class PriorityComparatorImpl implements PriorityComparator{
 
     public int comparePriority(User u1, User u2) {
         if (u1.getPoints() > u2.getPoints()) {
